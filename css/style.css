@@ -51,8 +51,12 @@ body {
     grid-template-rows: auto 1fr auto;
 }
 
-header, nav, main, footer {
+header, main, footer {
     padding: 1em;
+}
+
+p {
+    margin: 1em 0;
 }
 
 .hidden {
@@ -155,19 +159,29 @@ header h1, header>i {
 
 /* --- ELEMENTS */
 
+.nav-main-wrapper {
+    background: var(--bg-color-main);
+}
+
 /* Header */
 
 header {
     background: var(--accent-color);
     color: var(--font-color-white);
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
     gap: .5em;
+    position: sticky;
+    top: 0;
 }
 
 header>h1 {
     grid-column: 1/-1;
+}
+
+header>h1:hover {
+    cursor: pointer;
 }
 
 .search-container {
@@ -204,6 +218,12 @@ header>i {
     background: var(--bg-color-dark);
 }
 
+/* Nav */
+
+nav {
+    background: var(--bg-color-dark);
+}
+
 /* Pokemon Roster */
 
 #pokemon-roster {
@@ -215,9 +235,15 @@ header>i {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgb(243, 243, 243);
-    border: 1px solid rgba(0, 0, 0, .3);
-    border-radius: 10px;
+    color: var(--font-color-light);
+    padding: .5em;
+    font-family: var(--font-family-dex-title);
+    letter-spacing: 1px;
+}
+
+#pokemon-roster>li:hover {
+    cursor: pointer;
+    background: var(--accent-color-darker);
 }
 
 #pokemon-roster>li>span {
@@ -237,21 +263,29 @@ header>i {
 }
 
 /* Main */
-
 main {
-    background: var(--bg-color-main);
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 /* Pokemon Info */
 
 .pokemon-info {
     max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .pokemon-info img {
     width: 100%;
+}
+
+.pokemon-info h2 {
+    margin-bottom: .5em;
+    font-family: var(--font-family-dex-title);
+    font-weight: 400;
 }
 
 .pokemon-types {
@@ -263,7 +297,7 @@ main {
 
 footer {
     background: var(--bg-color-dark);
-    color: rgba(255,255,255,.5);
+    color: rgba(255, 255, 255, .5);
     font-size: .8em;
     text-align: center;
 }
@@ -271,4 +305,11 @@ footer {
 footer a {
     color: inherit;
     text-decoration: none;
+}
+
+/* --- MEDIA QUERIES */
+@media screen and (min-width:576px) {
+    header>h1 {
+        grid-column: 1;
+    }
 }

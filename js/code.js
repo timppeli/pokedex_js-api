@@ -10,37 +10,49 @@ const POKEMON_ROSTER = document.getElementById("pokemon-roster");
 const MAIN = document.querySelector("main");
 const ERROR_ELEMENT = MAIN.querySelector(".error");
 const POKEMON_INFO = MAIN.querySelector(".pokemon-info");
+const WELCOME = MAIN.querySelector(".welcome");
+const HEADER_H1 = document.querySelector("header>h1");
 
 let parsedResponse;
 let pokemonToSearch;
 
 /* --- EVENT HANDLERS */
+HEADER_H1.addEventListener("click", function () {
+    location.reload();
+});
+
 MENU_BUTTON.addEventListener("click", toggleMenu);
 
 SEARCH_BUTTON.addEventListener("click", function () {
     if (SEARCH_INPUT.value.length < 1) {
         ERROR_ELEMENT.innerHTML = "WRITE SOMETHING, DUMMY";
         POKEMON_INFO.innerHTML = "";
+        WELCOME.innerHTML = "";
     } else {
         pokemonToSearch = SEARCH_INPUT.value.toLowerCase();
         requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", searchForPokemon);
+        WELCOME.innerHTML = "";
     }
     SEARCH_INPUT.value = "";
 });
 
-///////////////////////////////////////
+requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", generatePokemonlistForNav);
 
-/*
-// Creates a roster of the first 151 pokemon
-for (let i = 1; i <= 151; i++) {
-    let pokemonSprite = "<img src=\"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + i + ".png\">";
-    let pokedexNumber = "#" + i + " ";
-    let pokemonName = "Bulbasaur";
-    let pokemonTypes = "";
-    pokemonTypes = "<div class=\"pokemon-type grass\">Grass</div>" + "<div class=\"pokemon-type poison\">Poison</div>";
-    POKEMON_ROSTER.innerHTML += "<li>" + pokemonSprite + "<span><h3>" + pokedexNumber + pokemonName + "</h3>" + pokemonTypes + "</span></li>";
+/**
+ * Generates a list of 151 Pokémon for the navigation
+ */
+function generatePokemonlistForNav() {
+    for (let i = 0; i < 151; i++) {
+        POKEMON_ROSTER.innerHTML += "<li>#" + (i + 1) + " " + parsedResponse.results[i].name[0].toUpperCase() + parsedResponse.results[i].name.substring(1) + "</li>";
+    }
+    const NAV_LINKS = POKEMON_ROSTER.getElementsByTagName("li");
+    for (let i = 0; i < NAV_LINKS.length; i++) {
+        NAV_LINKS[i].addEventListener("click", function() {
+            requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon/" + (i + 1) + "/", showPokemonInfo);
+            toggleMenu();
+        });
+    }
 }
-*/
 
 /* --- FUNCTIONS */
 
@@ -91,6 +103,7 @@ function searchForPokemon() {
 function showPokemonInfo() {
     POKEMON_INFO.innerHTML = "";
     ERROR_ELEMENT.innerHTML = "";
+    WELCOME.innerHTML = "";
     // Image
     let img = document.createElement("img");
     let img_src = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + parsedResponse.id + ".png";
