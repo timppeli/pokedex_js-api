@@ -6,6 +6,8 @@ Created a very simple Pokédex interface for the first 151 Pokémon. The user ca
 2) from a written navigation list, or 
 3) by using the search bar at the top of the page.
 
+Live demo: [here](https://www.students.oamk.fi/~n1peti00/webtekniikat/js-sivu/)
+
 ## The tools
 
 Built with
