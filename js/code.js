@@ -28,7 +28,7 @@ MENU_BUTTON.addEventListener("click", toggleMenu);
 
 SEARCH_BUTTON.addEventListener("click", function () {
     if (SEARCH_INPUT.value.length < 1) {
-        ERROR_ELEMENT.innerHTML = "WRITE SOMETHING, DUMMY";
+        ERROR_ELEMENT.innerHTML = "Please enter the name of the Pokémon you are looking for.";
         POKEMON_INFO.innerHTML = "";
         WELCOME.innerHTML = "";
     } else {
@@ -103,7 +103,7 @@ function searchForPokemon() {
         }
     }
     if (!pokemonIsFound) {
-        ERROR_ELEMENT.innerHTML = "Couldn't find information for <em>" + pokemonToSearch + "</em>.";
+        ERROR_ELEMENT.innerHTML = "<p>Couldn't find information for <em>" + pokemonToSearch + "</em>.</p><p>Is the name you entered spelled correctly?</p><p>Please note the search bar does not recognize empty spaces. You must use \"-\" instead.</p><p>For example, if you are looking for:<br>– Nidoran Male, type <em>nidoran-m</em><br>– Mr. Mime, type <em>mr-mime</em></p>";
         POKEMON_INFO.innerHTML = "";
     } else {
         requestAssistanceFromAPI(pokemonList[foundPokemonId].url, showPokemonInfo);
