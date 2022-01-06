@@ -41,7 +41,6 @@ SEARCH_BUTTON.addEventListener("click", function () {
 
 requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", generatePokemonlistForNav);
 
-
 /* --- FUNCTIONS */
 
 /**
@@ -179,6 +178,7 @@ function toggleMenu() {
     MENU_BUTTON.classList.toggle("fa-bars");
     MENU_BUTTON.classList.toggle("fa-times");
     MENU_BUTTON.classList.toggle("close-button");
+    MAIN.classList.toggle("hidden");
 }
 
 /**
