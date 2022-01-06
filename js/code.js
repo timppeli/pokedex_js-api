@@ -46,11 +46,22 @@ requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", generate
  */
 function generatePokemonlistForNav() {
     for (let i = 0; i < 151; i++) {
-        POKEMON_ROSTER.innerHTML += "<li>#" + (i + 1) + " " + parsedResponse.results[i].name[0].toUpperCase() + parsedResponse.results[i].name.substring(1) + "</li>";
+        let pokemonName = parsedResponse.results[i].name[0].toUpperCase() + parsedResponse.results[i].name.substring(1);
+        switch (pokemonName) {
+            case "Nidoran-m":
+                pokemonName = "Nidoran (Male)";
+                break;
+            case "Nidoran-f":
+                pokemonName = "Nidoran (Female)";
+                break;
+            case "Mr-mime":
+                pokemonName = "Mr. Mime";
+        }
+        POKEMON_ROSTER.innerHTML += "<li>#" + (i + 1) + " " + pokemonName + "</li>";
     }
     const NAV_LINKS = POKEMON_ROSTER.getElementsByTagName("li");
     for (let i = 0; i < NAV_LINKS.length; i++) {
-        NAV_LINKS[i].addEventListener("click", function() {
+        NAV_LINKS[i].addEventListener("click", function () {
             requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon/" + (i + 1) + "/", showPokemonInfo);
             toggleMenu();
         });
@@ -113,7 +124,18 @@ function showPokemonInfo() {
     img.setAttribute("src", img_src);
     // #000 and name
     let h2 = document.createElement("h2");
-    h2.textContent = "#" + parsedResponse.id + " " + parsedResponse.name[0].toUpperCase() + parsedResponse.name.substring(1);
+    let pokemonName = parsedResponse.name[0].toUpperCase() + parsedResponse.name.substring(1);
+    switch (pokemonName) {
+        case "Nidoran-m":
+            pokemonName = "Nidoran (Male)";
+            break;
+        case "Nidoran-f":
+            pokemonName = "Nidoran (Female)";
+            break;
+        case "Mr-mime":
+            pokemonName = "Mr. Mime";
+    }
+    h2.textContent = "#" + parsedResponse.id + " " + pokemonName;
     // Types
     let ul = document.createElement("ul");
     ul.classList.add("pokemon-types");
@@ -143,7 +165,7 @@ function toggleMenu() {
 /**
  * Calculates and sets the correct height for the nav element
  */
- function calculateNavHeight() {
+function calculateNavHeight() {
     const HEADER = document.querySelector("header");
     const FOOTER = document.querySelector("footer");
     const NAV = document.querySelector("nav");
