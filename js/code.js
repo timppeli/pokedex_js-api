@@ -17,6 +17,9 @@ let parsedResponse;
 let pokemonToSearch;
 
 /* --- EVENT HANDLERS */
+window.onload = calculateNavHeight;
+window.onresize = calculateNavHeight;
+
 HEADER_H1.addEventListener("click", function () {
     location.reload();
 });
@@ -135,4 +138,16 @@ function toggleMenu() {
     MENU_BUTTON.classList.toggle("fa-bars");
     MENU_BUTTON.classList.toggle("fa-times");
     MENU_BUTTON.classList.toggle("close-button");
+}
+
+/**
+ * Calculates and sets the correct height for the nav element
+ */
+ function calculateNavHeight() {
+    const HEADER = document.querySelector("header");
+    const FOOTER = document.querySelector("footer");
+    const NAV = document.querySelector("nav");
+
+    let headerAndFooterHeight = HEADER.offsetHeight + FOOTER.offsetHeight;
+    NAV.style.height = "calc(100vh - " + headerAndFooterHeight + "px)";
 }

@@ -222,6 +222,7 @@ header>i {
 
 nav {
     background: var(--bg-color-dark);
+    overflow: auto;
 }
 
 /* Pokemon Roster */
@@ -300,6 +301,8 @@ footer {
     color: rgba(255, 255, 255, .5);
     font-size: .8em;
     text-align: center;
+    position: sticky;
+    bottom: 0;
 }
 
 footer a {
