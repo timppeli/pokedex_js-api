@@ -18,8 +18,6 @@ let parsedResponse;
 let pokemonToSearch;
 
 /* --- EVENTS AND STUFF */
-window.onload = calculateNavHeight;
-window.onresize = calculateNavHeight;
 requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", generatePokemonListForMain);
 requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", generatePokemonlistForNav);
 
@@ -197,19 +195,11 @@ function toggleMenu() {
     MENU_BUTTON.classList.toggle("fa-bars");
     MENU_BUTTON.classList.toggle("fa-times");
     MENU_BUTTON.classList.toggle("close-button");
-    MAIN.classList.toggle("hidden");
-}
-
-/**
- * Calculates and sets the correct height for the nav element
- */
-function calculateNavHeight() {
-    const HEADER = document.querySelector("header");
-    const FOOTER = document.querySelector("footer");
-    const NAV = document.querySelector("nav");
-
-    let headerAndFooterHeight = HEADER.offsetHeight + FOOTER.offsetHeight;
-    NAV.style.height = "calc(100vh - " + headerAndFooterHeight + "px)";
+    if (POKEMON_INFO.innerHTML != "") {
+        RESULTS.classList.toggle("hidden");
+    } else {
+        MAIN.classList.toggle("hidden");
+    }
 }
 
 /**
