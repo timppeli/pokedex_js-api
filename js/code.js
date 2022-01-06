@@ -41,32 +41,6 @@ SEARCH_BUTTON.addEventListener("click", function () {
 
 requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", generatePokemonlistForNav);
 
-/**
- * Generates a list of 151 Pokémon for the navigation
- */
-function generatePokemonlistForNav() {
-    for (let i = 0; i < 151; i++) {
-        let pokemonName = parsedResponse.results[i].name[0].toUpperCase() + parsedResponse.results[i].name.substring(1);
-        switch (pokemonName) {
-            case "Nidoran-m":
-                pokemonName = "Nidoran (Male)";
-                break;
-            case "Nidoran-f":
-                pokemonName = "Nidoran (Female)";
-                break;
-            case "Mr-mime":
-                pokemonName = "Mr. Mime";
-        }
-        POKEMON_ROSTER.innerHTML += "<li>#" + (i + 1) + " " + pokemonName + "</li>";
-    }
-    const NAV_LINKS = POKEMON_ROSTER.getElementsByTagName("li");
-    for (let i = 0; i < NAV_LINKS.length; i++) {
-        NAV_LINKS[i].addEventListener("click", function () {
-            requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon/" + (i + 1) + "/", showPokemonInfo);
-            toggleMenu();
-        });
-    }
-}
 
 /* --- FUNCTIONS */
 
@@ -141,12 +115,10 @@ function showPokemonInfo() {
     for (let i = 0; i < parsedResponse.types.length; i++) {
         let type = parsedResponse.types[i].type.name;
         let li = document.createElement("li");
-        li.classList.add("type-card");
-        li.classList.add(type);
+        li.classList.add("type-card", type);
         li.textContent = type;
         typesList.appendChild(li);
     } 
-    
     // Stats
     let h3 = document.createElement("h3");
     h3.textContent = "Stats";
@@ -170,6 +142,33 @@ function showPokemonInfo() {
     statsList.append(li1,li2);
     // Append everything
     POKEMON_INFO.append(img, h2, typesList, h3, statsList);
+}
+
+/**
+ * Generates a list of 151 Pokémon for the navigation
+ */
+ function generatePokemonlistForNav() {
+    for (let i = 0; i < 151; i++) {
+        let pokemonName = parsedResponse.results[i].name[0].toUpperCase() + parsedResponse.results[i].name.substring(1);
+        switch (pokemonName) {
+            case "Nidoran-m":
+                pokemonName = "Nidoran (Male)";
+                break;
+            case "Nidoran-f":
+                pokemonName = "Nidoran (Female)";
+                break;
+            case "Mr-mime":
+                pokemonName = "Mr. Mime";
+        }
+        POKEMON_ROSTER.innerHTML += "<li>#" + (i + 1) + " " + pokemonName + "</li>";
+    }
+    const NAV_LINKS = POKEMON_ROSTER.getElementsByTagName("li");
+    for (let i = 0; i < NAV_LINKS.length; i++) {
+        NAV_LINKS[i].addEventListener("click", function () {
+            requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon/" + (i + 1) + "/", showPokemonInfo);
+            toggleMenu();
+        });
+    }
 }
 
 /**

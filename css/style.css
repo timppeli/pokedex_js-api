@@ -72,6 +72,12 @@ header h1, header>i {
     text-shadow: var(--text-shadow);
 }
 
+header h1 {
+    font-size: 1.5em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
 .type-card {
     background: #eee;
     padding: 5px;
@@ -268,6 +274,7 @@ nav {
 }
 
 /* Main */
+
 main {
     display: flex;
     justify-content: center;
