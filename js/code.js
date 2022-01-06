@@ -8,17 +8,20 @@ const SEARCH_INPUT = document.getElementById("pokemon-search");
 const NAV = document.querySelector("nav");
 const POKEMON_ROSTER = document.getElementById("pokemon-roster");
 const MAIN = document.querySelector("main");
-const ERROR_ELEMENT = MAIN.querySelector(".error");
-const POKEMON_INFO = MAIN.querySelector(".pokemon-info");
+const RESULTS = document.querySelector(".results");
+const ERROR_ELEMENT = RESULTS.querySelector(".error");
+const POKEMON_INFO = RESULTS.querySelector(".pokemon-info");
 const WELCOME = MAIN.querySelector(".welcome");
 const HEADER_H1 = document.querySelector("header>h1");
 
 let parsedResponse;
 let pokemonToSearch;
 
-/* --- EVENT HANDLERS */
+/* --- EVENTS AND STUFF */
 window.onload = calculateNavHeight;
 window.onresize = calculateNavHeight;
+requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", generatePokemonListForMain);
+requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", generatePokemonlistForNav);
 
 HEADER_H1.addEventListener("click", function () {
     location.reload();
@@ -26,22 +29,8 @@ HEADER_H1.addEventListener("click", function () {
 
 MENU_BUTTON.addEventListener("click", toggleMenu);
 
-SEARCH_BUTTON.addEventListener("click", function () {
-    if (SEARCH_INPUT.value.length < 1) {
-        ERROR_ELEMENT.classList.remove("hidden");
-        ERROR_ELEMENT.innerHTML = "Please enter the name of the Pokémon you are looking for.";
-        POKEMON_INFO.classList.add("hidden")
-        WELCOME.classList.add("hidden")
-    } else {
-        pokemonToSearch = SEARCH_INPUT.value.toLowerCase();
-        requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", searchForPokemon);
-        WELCOME.classList.add("hidden");
-        ERROR_ELEMENT.classList.add("hidden");
-    }
-    SEARCH_INPUT.value = "";
-});
+SEARCH_BUTTON.addEventListener("click", initiateSearch);
 
-requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", generatePokemonlistForNav);
 
 /* --- FUNCTIONS */
 
@@ -64,6 +53,26 @@ function requestAssistanceFromAPI(url, functionToCall) {
 }
 
 /**
+ * Hides the main text, shows the search results (error message or the Pokémon info)
+ */
+function initiateSearch() {
+    if (SEARCH_INPUT.value.length < 1) {
+        POKEMON_INFO.classList.add("hidden")
+        MAIN.classList.add("hidden")
+        RESULTS.classList.remove("hidden");
+        ERROR_ELEMENT.classList.remove("hidden");
+        ERROR_ELEMENT.innerHTML = "Please enter the name of the Pokémon you are looking for.";
+    } else {
+        pokemonToSearch = SEARCH_INPUT.value.toLowerCase();
+        requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", searchForPokemon);
+        RESULTS.classList.remove("hidden");
+        MAIN.classList.add("hidden");
+        ERROR_ELEMENT.classList.add("hidden");
+    }
+    SEARCH_INPUT.value = "";
+}
+
+/**
  * Checks if the search box input matches any of the 151 Pokémon in the Dex. If not > error message. If yes > calls a function to display additional information about said Pokémon.
  */
 function searchForPokemon() {
@@ -78,12 +87,14 @@ function searchForPokemon() {
         }
     }
     if (!pokemonIsFound) {
+        RESULTS.classList.remove("hidden");
         ERROR_ELEMENT.classList.remove("hidden");
         ERROR_ELEMENT.innerHTML = "<p>Couldn't find information for <em>" + pokemonToSearch + "</em>.</p><p>Is the name you entered spelled correctly?</p><p>Please note the search bar does not recognize empty spaces. You must use \"-\" instead.</p><p>For example, if you are looking for:<br>– Nidoran Male, type <em>nidoran-m</em><br>– Mr. Mime, type <em>mr-mime</em></p>";
         POKEMON_INFO.innerHTML = "";
     } else {
         ERROR_ELEMENT.classList.add("hidden");
-        WELCOME.classList.add("hidden");
+        MAIN.classList.add("hidden");
+        RESULTS.classList.remove("hidden");
         POKEMON_INFO.classList.remove("hidden");
         requestAssistanceFromAPI(pokemonList[foundPokemonId].url, showPokemonInfo);
     }
@@ -95,7 +106,8 @@ function searchForPokemon() {
 function showPokemonInfo() {
     POKEMON_INFO.innerHTML = "";
     ERROR_ELEMENT.classList.add("hidden");
-    WELCOME.classList.add("hidden");
+    MAIN.classList.add("hidden");
+    RESULTS.classList.remove("hidden");
     POKEMON_INFO.classList.remove("hidden");
     // Image
     let img = document.createElement("img");
@@ -124,7 +136,7 @@ function showPokemonInfo() {
         li.classList.add("type-card", type);
         li.textContent = type;
         typesList.appendChild(li);
-    } 
+    }
     // Stats
     let h3 = document.createElement("h3");
     h3.textContent = "Stats";
@@ -145,7 +157,7 @@ function showPokemonInfo() {
     let li2 = document.createElement("li");
     li1.textContent = "Total";
     li2.textContent = baseStatTotal;
-    statsList.append(li1,li2);
+    statsList.append(li1, li2);
     // Append everything
     POKEMON_INFO.append(img, h2, typesList, h3, statsList);
 }
@@ -153,7 +165,7 @@ function showPokemonInfo() {
 /**
  * Generates a list of 151 Pokémon for the navigation
  */
- function generatePokemonlistForNav() {
+function generatePokemonlistForNav() {
     for (let i = 0; i < 151; i++) {
         let pokemonName = parsedResponse.results[i].name[0].toUpperCase() + parsedResponse.results[i].name.substring(1);
         switch (pokemonName) {
@@ -198,4 +210,35 @@ function calculateNavHeight() {
 
     let headerAndFooterHeight = HEADER.offsetHeight + FOOTER.offsetHeight;
     NAV.style.height = "calc(100vh - " + headerAndFooterHeight + "px)";
+}
+
+/**
+ * Generates a list of sprites for the main page. Shows the Pokémon's info when the corresponding image is clicked.
+ */
+function generatePokemonListForMain() {
+    const POKEMON_LIST = document.querySelector(".pokemon-list");
+    for (let i = 0; i < 151; i++) {
+        let pokemonName = parsedResponse.results[i].name[0].toUpperCase() + parsedResponse.results[i].name.substring(1);
+        switch (pokemonName) {
+            case "Nidoran-m":
+                pokemonName = "Nidoran (Male)";
+                break;
+            case "Nidoran-f":
+                pokemonName = "Nidoran (Female)";
+                break;
+            case "Mr-mime":
+                pokemonName = "Mr. Mime";
+        }
+        let img = document.createElement("img");
+        img.setAttribute("src", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + (i + 1) + ".png");
+        img.setAttribute("title", pokemonName);
+        POKEMON_LIST.appendChild(img);
+
+    }
+    const LIST_IMAGES = POKEMON_LIST.getElementsByTagName("img");
+    for (let i = 0; i < LIST_IMAGES.length; i++) {
+        LIST_IMAGES[i].addEventListener("click", function () {
+            requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon/" + (i + 1) + "/", showPokemonInfo);
+        });
+    }
 }

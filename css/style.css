@@ -51,7 +51,7 @@ body {
     grid-template-rows: auto 1fr auto;
 }
 
-header, main, footer {
+header, main, .results, footer {
     padding: 1em;
 }
 
@@ -61,11 +61,6 @@ p {
 
 .welcome, .error {
     max-width: 500px;
-}
-
-.hidden {
-    display: none;
-    visibility: hidden;
 }
 
 header h1, header>i {
@@ -274,10 +269,25 @@ nav {
 
 /* Main */
 
-main {
+main, .results {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+main {
+    flex-direction: column;
+    gap: 1em;
+}
+
+/* Pokemon List */
+
+.pokemon-list {
+    text-align: center;
+}
+
+.pokemon-list img {
+    cursor: pointer;
 }
 
 /* Pokemon Info */
@@ -398,4 +408,11 @@ footer a {
     .pokemon-stats {
         grid-row: 5;
     }
+}
+
+/* --- ALWAYS LOAD LAST */
+
+.hidden {
+    display: none;
+    visibility: hidden;
 }
