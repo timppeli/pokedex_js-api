@@ -95,7 +95,6 @@ function searchForPokemon() {
     let pokemonList = parsedResponse.results;
     let pokemonIsFound = false;
     let foundPokemonId = "";
-
     for (let i = 0; i < pokemonList.length; i++) {
         if (pokemonList[i].name === pokemonToSearch) {
             pokemonIsFound = true;
@@ -122,7 +121,7 @@ function showPokemonInfo() {
     let img = document.createElement("img");
     let img_src = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + parsedResponse.id + ".png";
     img.setAttribute("src", img_src);
-    // #000 and name
+    // # and name
     let h2 = document.createElement("h2");
     let pokemonName = parsedResponse.name[0].toUpperCase() + parsedResponse.name.substring(1);
     switch (pokemonName) {
@@ -137,19 +136,40 @@ function showPokemonInfo() {
     }
     h2.textContent = "#" + parsedResponse.id + " " + pokemonName;
     // Types
-    let ul = document.createElement("ul");
-    ul.classList.add("pokemon-types");
-
+    let typesList = document.createElement("ul");
+    typesList.classList.add("pokemon-types");
     for (let i = 0; i < parsedResponse.types.length; i++) {
         let type = parsedResponse.types[i].type.name;
         let li = document.createElement("li");
         li.classList.add("type-card");
         li.classList.add(type);
         li.textContent = type;
-        ul.appendChild(li);
+        typesList.appendChild(li);
+    } 
+    
+    // Stats
+    let h3 = document.createElement("h3");
+    h3.textContent = "Stats";
+    let statsList = document.createElement("ul");
+    statsList.classList.add("pokemon-stats");
+    let statNames = ["HP", "Attack", "Defense", "Sp. Attack", "Sp. Defense", "Speed"];
+    let baseStatTotal = 0;
+    for (let i = 0; i < parsedResponse.stats.length; i++) {
+        let statValue = parsedResponse.stats[i].base_stat;
+        let li1 = document.createElement("li");
+        let li2 = document.createElement("li");
+        li1.textContent = statNames[i];
+        li2.textContent = statValue;
+        statsList.append(li1, li2);
+        baseStatTotal += statValue;
     }
+    let li1 = document.createElement("li");
+    let li2 = document.createElement("li");
+    li1.textContent = "Total";
+    li2.textContent = baseStatTotal;
+    statsList.append(li1,li2);
     // Append everything
-    POKEMON_INFO.append(img, h2, ul);
+    POKEMON_INFO.append(img, h2, typesList, h3, statsList);
 }
 
 /**
