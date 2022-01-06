@@ -28,13 +28,15 @@ MENU_BUTTON.addEventListener("click", toggleMenu);
 
 SEARCH_BUTTON.addEventListener("click", function () {
     if (SEARCH_INPUT.value.length < 1) {
+        ERROR_ELEMENT.classList.remove("hidden");
         ERROR_ELEMENT.innerHTML = "Please enter the name of the Pokémon you are looking for.";
-        POKEMON_INFO.innerHTML = "";
-        WELCOME.innerHTML = "";
+        POKEMON_INFO.classList.add("hidden")
+        WELCOME.classList.add("hidden")
     } else {
         pokemonToSearch = SEARCH_INPUT.value.toLowerCase();
         requestAssistanceFromAPI("https://pokeapi.co/api/v2/pokemon?limit=151", searchForPokemon);
-        WELCOME.innerHTML = "";
+        WELCOME.classList.add("hidden");
+        ERROR_ELEMENT.classList.add("hidden");
     }
     SEARCH_INPUT.value = "";
 });
@@ -76,9 +78,13 @@ function searchForPokemon() {
         }
     }
     if (!pokemonIsFound) {
+        ERROR_ELEMENT.classList.remove("hidden");
         ERROR_ELEMENT.innerHTML = "<p>Couldn't find information for <em>" + pokemonToSearch + "</em>.</p><p>Is the name you entered spelled correctly?</p><p>Please note the search bar does not recognize empty spaces. You must use \"-\" instead.</p><p>For example, if you are looking for:<br>– Nidoran Male, type <em>nidoran-m</em><br>– Mr. Mime, type <em>mr-mime</em></p>";
         POKEMON_INFO.innerHTML = "";
     } else {
+        ERROR_ELEMENT.classList.add("hidden");
+        WELCOME.classList.add("hidden");
+        POKEMON_INFO.classList.remove("hidden");
         requestAssistanceFromAPI(pokemonList[foundPokemonId].url, showPokemonInfo);
     }
 }
@@ -88,8 +94,9 @@ function searchForPokemon() {
  */
 function showPokemonInfo() {
     POKEMON_INFO.innerHTML = "";
-    ERROR_ELEMENT.innerHTML = "";
-    WELCOME.innerHTML = "";
+    ERROR_ELEMENT.classList.add("hidden");
+    WELCOME.classList.add("hidden");
+    POKEMON_INFO.classList.remove("hidden");
     // Image
     let img = document.createElement("img");
     let img_src = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + parsedResponse.id + ".png";
